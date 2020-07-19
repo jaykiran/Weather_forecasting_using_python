@@ -1,7 +1,3 @@
-# smartmirror.py
-# requirements
-# requests, feedparser, traceback, Pillow
-
 from Tkinter import *
 import locale
 import threading
@@ -10,15 +6,14 @@ import requests
 import json
 import traceback
 import feedparser
-
 from PIL import Image, ImageTk
 from contextlib import contextmanager
 
 LOCALE_LOCK = threading.Lock()
 
-ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
-time_format = 12 # 12 or 24
-date_format = "%b %d, %Y" # check python doc for strftime() for options
+ui_locale = ''
+time_format = 12 
+date_format = "%b %d, %Y" 
 news_country_code = 'India'
 weather_api_token = 'f7b11ec7648bef6ba9e0eb548205c471' # create account at https://darksky.net/dev/
 weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
@@ -39,8 +34,7 @@ def setlocale(name): #thread proof function to work with locale
         finally:
             locale.setlocale(locale.LC_ALL, saved)
 
-# maps open weather icons to
-# icon reading is not impacted by the 'lang' parameter
+#icons dictionary
 icon_lookup = {
     'clear-day': "assets/Sun.png",  # clear sky day
     'wind': "assets/Wind.png",   #wind
@@ -78,13 +72,12 @@ class Clock(Frame):
     def tick(self):
         with setlocale(ui_locale):
             if time_format == 12:
-                time2 = time.strftime('%I:%M %p') #hour in 12h format
+                time2 = time.strftime('%I:%M %p') 
             else:
-                time2 = time.strftime('%H:%M') #hour in 24h format
+                time2 = time.strftime('%H:%M')
 
             day_of_week2 = time.strftime('%A')
             date2 = time.strftime(date_format)
-            # if time string has changed, update it
             if time2 != self.time1:
                 self.time1 = time2
                 self.timeLbl.config(text=time2)
@@ -94,9 +87,6 @@ class Clock(Frame):
             if date2 != self.date1:
                 self.date1 = date2
                 self.dateLbl.config(text=date2)
-            # calls itself every 200 milliseconds
-            # to update the time display as needed
-            # could use >200 ms, but display gets jerky
             self.timeLbl.after(200, self.tick)
 
 
